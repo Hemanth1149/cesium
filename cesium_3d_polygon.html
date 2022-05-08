@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.92/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.92/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <style>
+        #cesiumContainer {
+            height: auto;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cesiumContainer"></div>
+    <script>
+        Cesium.Ion.defaultAccessToken =
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkN2E3MTFkOS1mZmVlLTRjMWEtOTA4ZS04MzQ5ZDk5Y2ZjZTEiLCJpZCI6ODI5MTIsImlhdCI6MTY0NTE1ODU2Mn0.4GuIYJ-O4hv-gmb1aD1hAFeD7P8s_tqzbfswGxN6SUY';
+        // Initialize the Cesium Viewer in the HTML element with the `cesiumContainer` ID.
+        var viewer = new Cesium.Viewer('cesiumContainer');
+
+        var promise = Cesium.GeoJsonDataSource.load('BANG_3D_Polygon_DD.geojson', {
+            stroke: Cesium.Color.GRAY,
+            fill: Cesium.Color.PINK,
+            strokeWidth: 3,
+        });
+        promise.then(function (dataSource) {
+            viewer.dataSources.add(dataSource);
+            var entities = dataSource.entities.values;
+            for (var i = 0; i < entities.length; i++) {
+                var entity = entities[i];
+                //Extrude the polygon based on any attribute you desire         
+                entity.polygon.extrudedHeight = entity.properties.parent_id;
+            }
+        });
+
+        viewer.zoomTo(promise);
+    </script>
+</body>
+
+</html>
